@@ -5,7 +5,6 @@ const gameBoard = (function () {
                 [null, null, null]]
 
     const markBoard = (player, positionX, positionY) => {
-        // TODO
         if (positionX > 2 || positionY > 2) {
             alert("ERROR: marker not positioned properly")
         } else {
@@ -29,19 +28,36 @@ const gameBoard = (function () {
 
         const combosToTest = [rowOne, rowTwo, rowThree, colOne, colTwo, colThree, diagOne, diagTwo]
 
-        for (let combs in combosToTest) {
+        for (const combs of combosToTest) {
             let match = true;
-            for (let m in combs) {
-                match = match & (m == player.getMarker)
+            for (const m of combs) {
+                if (m === null) {
+                    match = false
+                    break;
+                }
+                match = match && (m === player.getMarker())
+            }
+            if (match) {
+                return true;
             }
         }
+
+        return false;
     }
+
+    const renderBoard = () => {
+        
+    }
+
+
     return {gb, markBoard, checkWin};
 })();
 
+
+
 function createPlayer(name, marker) {
     const n = name;
-    const m = Object.toString(marker);
+    const m = marker
 
     const getName = () => {
         return n
@@ -52,4 +68,35 @@ function createPlayer(name, marker) {
     }
 
     return {getName, getMarker}
+}
+
+
+const x = createPlayer("X", "X")
+
+const o = createPlayer("O", "O")
+
+function gameRun() {
+    let gameEnd = false
+    while (!gameEnd) {
+        let playerXHor = prompt("Player X please enter your horizontal coordinate")
+        let playerXVert = prompt("Player X please enter your vertical coordinate")
+
+        gameBoard.markBoard(x, playerXHor, playerXVert)
+        if (gameBoard.checkWin(x)) {
+            alert("CONGRATS ON THE WIN PLAYER X")
+            gameEnd = true
+            break;
+        }
+
+        let playerOHor = prompt("Player O please enter your horizontal coordinate")
+        let playerOVert = prompt("Player O please enter your vertical coordinate")
+
+        gameBoard.markBoard(o, playerOHor, playerOVert)
+        if (gameBoard.checkWin(o)) {
+            alert("CONGRATS ON THE WIN PLAYER O")
+            gameEnd = true
+            break;
+        }
+
+    }
 }
